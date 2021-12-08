@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEGO BRICKS</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+    <script src="https://unpkg.com/aframe-click-drag-component"></script>
+    <script>
+      AFRAME.registerComponent('capture-mouse', {
+        init: function () {
+          this.eventRepeater = this.eventRepeater.bind(this)
+          this.el.sceneEl.addEventListener('loaded', () => {
+            this.el.sceneEl.canvas.addEventListener('mousedown', this.eventRepeater)
+            this.el.sceneEl.canvas.addEventListener('mouseup', this.eventRepeater)
+            this.el.sceneEl.canvas.addEventListener('touchstart', this.eventRepeater)
+            this.el.sceneEl.canvas.addEventListener('touchmove', this.eventRepeater)
+            this.el.sceneEl.canvas.addEventListener('touchend', this.eventRepeater)
+          }, {once: true})
+        },
+        eventRepeater: function (evt) {
+          if (evt.type.startsWith('touch')) {
+            evt.preventDefault()
+            // avoid repeating touchmove because it interferes with look-controls
+            if (evt.type === 'touchmove') { return }
+          }
+          this.el.emit(evt.type, evt.detail)
+        }
+      })
+    </script>
+</head>
+<body>
+  <a-scene>
+    <a-sky color="#6EBAA7"></a-sky>
+    <a-entity light="color: #FFF; intensity: 2.5" position="2 2 0"></a-entity>
+    <a-entity camera look-controls wasd-controls="acceleration:500" position="100 1.7 0"
+              capture-mouse
+              raycaster cursor="rayOrigin:mouse"
+              body="type: static; shape: sphere; sphereRadius: 0.001"
+              super-hands="colliderEvent: raycaster-intersection;
+                          colliderEventProperty: els;
+                          colliderEndEvent:raycaster-intersection-cleared;
+                          colliderEndEventProperty: clearedEls;">
+    </a-entity>
+    <a-assets>
+      <a-asset-item id="bedroom" src="assets/room1/scene.gltf"></a-asset-item>
+      <a-asset-item id="lego" src="assets/lego1/scene.gltf"></a-asset-item>
+    </a-assets>
+    <a-gltf-model src="assets/room1/scene.gltf" scale="1 1 1" position="180 -180 90" rotation="0 90 0"></a-gltf-model>
+    <a-gltf-model src="assets/lego1/scene.gltf" scale="0.4 0.4 0.4" grabbable stretchable draggable droppable position ="280 -70 80.5" rotation ="0 45 0"></a-gltf-model>
+    <a-gltf-model src="assets/lego1/scene.gltf" scale="0.4 0.4 0.4" grabbable stretchable draggable droppable position ="310 -70 80" rotation="0 90 0"></a-gltf-model>
+    <a-gltf-model src="assets/lego1/scene.gltf" scale="0.6 0.6 0.6" grabbable stretchable draggable droppable position ="295 -70 60" rotation="0 -30 0"></a-gltf-model>
+    <a-gltf-model src="assets/lego1/scene.gltf" scale="0.3 0.3 0.3" grabbable stretchable draggable droppable position ="280 -70 50"></a-gltf-model>
+    <a-gltf-model src="assets/lego1/scene.gltf" scale="0.4 0.4 0.4" grabbable stretchable draggable droppable position ="320 -70 66"></a-gltf-model>
+  </a-scene>
+</body>
+</html>
